@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#6755c7">
+<title>کارآگاهان مربع گمشده | آموزش مربع کامل</title>
+<style>
+:root{--ink:#26324a;--purple:#6755c7;--blue:#438bd8;--yellow:#efbd50;--green:#35a77b;--paper:#f5f3ff}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(135deg,#f2efff,#eaf7ff);font-family:Tahoma,Arial,sans-serif;color:var(--ink);padding:16px}
+main{max-width:850px;margin:auto}
+header{background:linear-gradient(120deg,#5743a6,#9476d8);color:#fff;padding:22px;border-radius:22px;box-shadow:0 8px 22px #44308022}
+h1{font-size:clamp(23px,4vw,34px);margin:0 0 8px}
+header p{margin:0;line-height:1.9}
+.stats{display:flex;justify-content:space-between;gap:10px;margin-top:18px;font-weight:bold}
+.track{height:9px;background:#ffffff55;border-radius:20px;margin-top:10px;overflow:hidden}
+#bar{height:100%;width:20%;background:#ffe28a;transition:width .3s}
+.card{background:white;border:1px solid #e5e0f4;border-radius:20px;padding:18px;margin-top:15px;box-shadow:0 5px 18px #4430800b}
+.step-label{color:#7566b5;font-size:13px;font-weight:bold}
+h2{margin:7px 0 5px;font-size:22px}
+p{line-height:1.9}
+.stage-dots{display:flex;justify-content:center;gap:8px;margin:16px}
+.dot{width:10px;height:10px;background:#c9c3dc;border-radius:20px}
+.dot.on{width:26px;background:var(--purple)}
+.diagram-wrap{background:#f5f7ff;border-radius:16px;padding:12px;margin:16px auto;max-width:520px}
+svg{display:block;width:100%;height:auto;max-height:370px}
+.piece{transition:opacity .55s,transform .55s}
+.caption{text-align:center;font-weight:bold;margin:10px 0;color:#4b4770}
+.note{background:#f3f0ff;border-radius:13px;padding:13px;text-align:center;line-height:2}
+button{font-family:inherit;font-size:15px;font-weight:bold;border:0;border-radius:13px;padding:13px 17px;cursor:pointer}
+button:disabled{opacity:.4;cursor:not-allowed}
+.primary{background:var(--purple);color:white}
+.secondary{background:#eeebfa;color:#4b4380}
+.controls{display:flex;gap:10px;margin-top:14px}
+.controls button{flex:1}
+.legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;font-size:13px}
+.pill{padding:7px 10px;border-radius:20px;background:#f2f4fa}
+.quiz-choice{width:100%;background:#f5f3fc;color:#34304c;border:2px solid #e4def5;margin:5px 0;text-align:center}
+.quiz-choice.good{background:#e4f7ed;border-color:#35a77b}
+.quiz-choice.bad{background:#fff0ed;border-color:#dc7668}
+#feedback{padding:12px;background:#f5f3fc;border-radius:12px;min-height:48px;line-height:1.8}
+#quiz,#result{display:none}
+.formula{font-size:clamp(20px,4vw,28px);font-weight:bold;direction:ltr;text-align:center;color:#3c347c;padding:12px}
+footer{text-align:center;color:#756e91;font-size:12px;margin:18px}
+@media(max-width:500px){body{padding:10px}.card{padding:14px}.controls button{padding:12px 8px;font-size:13px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+ <div style="font-size:14px;opacity:.9">بازی آموزشی ریاضی دهم انسانی</div>
+ <h1>🕵️ کارآگاهان مربع گمشده</h1>
+ <p>با هم قطعه‌های گمشده را پیدا می‌کنیم و راز مربع کامل را کشف می‌کنیم!</p>
+ <div class="stats"><span>⭐ امتیاز: <b id="score">۰</b></span><span>مرحله <b id="stageNo">۱</b> از ۵</span></div>
+ <div class="track"><div id="bar"></div></div>
+</header>
+
+<div class="stage-dots" id="dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+
+<section class="card" id="lesson">
+ <div class="step-label" id="stepLabel">ماموریت اول</div>
+ <h2 id="title">مربع را بشناس!</h2>
+ <p id="description">اگر ضلع یک مربع x باشد، مساحت آن x ضربدر x یعنی x² است.</p>
+ <div class="diagram-wrap">
+  <svg viewBox="0 0 340 300" role="img" aria-label="شکل هندسی مربع و مستطیل‌ها برای کامل کردن مربع">
+   <!-- مربع اصلی: 160 در 160 -->
+   <rect x="55" y="85" width="160" height="160" rx="3" fill="#438bd8" stroke="white" stroke-width="2"/>
+   <text x="135" y="174" fill="white" font-size="23" font-weight="bold" text-anchor="middle">x²</text>
+   <!-- مستطیل بالایی: 160 در 40 -->
+   <g id="topPiece" class="piece" opacity="0">
+    <rect x="55" y="45" width="160" height="40" rx="2" fill="#efbd50" stroke="white" stroke-width="2"/>
+    <text x="135" y="71" fill="#49370b" font-size="17" font-weight="bold" text-anchor="middle">2x</text>
+   </g>
+   <!-- مستطیل کناری: 40 در 160 -->
+   <g id="sidePiece" class="piece" opacity="0">
+    <rect x="215" y="85" width="40" height="160" rx="2" fill="#efbd50" stroke="white" stroke-width="2"/>
+    <text x="235" y="170" fill="#49370b" font-size="15" font-weight="bold" text-anchor="middle" transform="rotate(90 235 170)">2x</text>
+   </g>
+   <!-- مربع کوچک گوشه -->
+   <g id="cornerPiece" class="piece" opacity="0">
+    <rect x="215" y="45" width="40" height="40" rx="2" fill="#35a77b" stroke="white" stroke-width="2"/>
+    <text id="cornerText" x="235" y="70" fill="white" font-size="16" font-weight="bold" text-anchor="middle">؟</text>
+   </g>
+   <g fill="#4c456f" font-size="14" text-anchor="middle">
+    <text x="135" y="270">ضلع x</text>
+    <text x="282" y="170">۲</text>
+    <text x="135" y="30">x + 2</text>
+   </g>
+  </svg>
+  <div class="legend">
+   <span class="pill">🟦 مربع اصلی: x²</span>
+   <span class="pill">🟨 دو مستطیل: 2x و 2x</span>
+   <span class="pill">🟩 مربع گوشه: ۴</span>
+  </div>
+ </div>
+ <div class="caption" id="caption">یک مربع آبی داریم؛ مساحت آن x² است.</div>
+ <div class="note"><b>💡 نکته این مرحله</b><br><span id="hint">مساحت مربع = ضلع × ضلع</span></div>
+ <div class="controls">
+  <button class="secondary" id="prev" disabled>→ مرحله قبل</button>
+  <button class="primary" id="next">مرحله بعد ←</button>
+ </div>
+</section>
+
+<section class="card" id="quiz">
+ <div class="step-label">🎮 آزمون کارآگاهی</div>
+ <h2>حالا خودت امتحان کن!</h2>
+ <p id="question"></p>
+ <div id="choices"></div>
+ <div id="feedback" aria-live="polite">یک پاسخ را انتخاب کن.</div>
+ <button class="primary" id="quizNext" style="width:100%;margin-top:12px" hidden>سؤال بعدی ←</button>
+</section>
+
+<section class="card" id="result">
+ <div style="text-align:center">
+  <div style="font-size:55px">🏆</div>
+  <h2>آفرین، کارآگاه ریاضی!</h2>
+  <p>تو راز مربع کامل را کشف کردی.</p>
+  <div class="formula" id="finalScore">۰ امتیاز</div>
+ </div>
+ <div class="note"><b>قانون طلایی</b><br>نصف ضریب x را در خودش ضرب کن!<div class="formula">(x + a)² = x² + 2ax + a²</div></div>
+ <button class="primary" id="restart" style="width:100%;margin-top:14px">🔄 شروع دوباره</button>
+</section>
+<footer>مناسب تدریس با لپ‌تاپ، گوشی و ویدئوپروژکتور | برای یادگیری، اول حدس بزن و بعد مرحله بعد را بزن.</footer>
+</main>
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+let stage=0,score=0,qIndex=0,answered=false;
+const titles=['مربع را بشناس!','مستطیل‌ها وارد می‌شوند!','جای خالی را پیدا کن!','مربع را کامل کن!','راز فرمول را کشف کن!'];
+const descriptions=[
+'اگر ضلع یک مربع x باشد، مساحت آن x ضربدر x یعنی x² است.',
+'عدد ۴x را به دو قسمت مساوی تقسیم می‌کنیم: دو مستطیل با مساحت ۲x.',
+'دو مستطیل را کنار دو ضلع مربع گذاشتیم. گوشه خالی چه شکلی است؟',
+'ضلع گوشه خالی نصف ۴ است، یعنی ۲. پس مساحت آن ۲ ضربدر ۲ یعنی ۴ است.',
+'حالا شکل بزرگ یک مربع با ضلع x+2 شده است. پس عبارت ما مربع کامل است.'
+];
+const captions=['یک مربع آبی داریم؛ مساحت آن x² است.','دو مستطیل زرد، هر کدام با مساحت ۲x، به دو ضلع مربع اضافه شدند.','در گوشه بالا سمت راست یک مربع کوچک خالی مانده است.','گوشه خالی را با مربع سبز به مساحت ۴ پر می‌کنیم.','کل شکل یک مربع با ضلع x+2 است.'];
+const hints=['مساحت مربع = ضلع × ضلع','۴x یعنی ۲x + ۲x؛ پس دو مستطیل هم‌اندازه داریم.','ضلع مربع کوچک برابر نصف ۴، یعنی ۲ است.','۲ × ۲ = ۴؛ این عدد را به عبارت اضافه می‌کنیم.','x² + 4x + 4 = (x+2)²'];
+function render(){
+ $('stageNo').textContent=fa(stage+1);$('bar').style.width=((stage+1)*20)+'%';
+ [...$('dots').children].forEach((d,i)=>d.classList.toggle('on',i===stage));
+ $('stepLabel').textContent='ماموریت '+fa(stage+1);
+ $('title').textContent=titles[stage];$('description').textContent=descriptions[stage];
+ $('caption').textContent=captions[stage];$('hint').textContent=hints[stage];
+ $('topPiece').style.opacity=stage>=1?1:0;
+ $('sidePiece').style.opacity=stage>=1?1:0;
+ $('cornerPiece').style.opacity=stage>=2?1:0;
+ $('cornerText').textContent=stage>=3?'۴':'؟';
+ $('prev').disabled=stage===0;
+ $('next').textContent=stage===4?'رفتن به آزمون 🏆':'مرحله بعد ←';
+}
+$('next').addEventListener('click',()=>{
+ if(stage<4){stage++;render();}
+ else{$('lesson').style.display='none';$('dots').style.display='none';$('quiz').style.display='block';$('next').style.display='none';$('prev').style.display='none';startQuiz();}
+});
+$('prev').addEventListener('click',()=>{if(stage>0){stage--;render();}});
+const questions=[
+ {q:'در عبارت x² + 4x، نصف ضریب x چند می‌شود؟',opts:['۲','۴','۸'],correct:0,why:'۴ تقسیم بر ۲ برابر ۲ است.'},
+ {q:'۲ را در خودش ضرب کنیم، چند می‌شود؟',opts:['۲','۴','۶'],correct:1,why:'۲ × ۲ = ۴؛ این مساحت مربع کوچک است.'},
+ {q:'کدام عبارت یک مربع کامل است؟',opts:['x² + 4x + 4','x² + 4x + 2','x² + 4x + 8'],correct:0,why:'x² + 4x + 4 = (x+2)²'}
+];
+function startQuiz(){qIndex=0;ask();}
+function ask(){
+ answered=false;$('quizNext').hidden=true;
+ let q=questions[qIndex];$('question').textContent='سؤال '+fa(qIndex+1)+' از ۳: '+q.q;
+ $('choices').innerHTML='';
+ q.opts.forEach((v,i)=>{let b=document.createElement('button');b.className='quiz-choice';b.textContent=v;b.addEventListener('click',()=>answer(i));$('choices').appendChild(b);});
+ $('feedback').textContent='یک پاسخ را انتخاب کن.';
+}
+function answer(i){
+ if(answered)return;answered=true;let q=questions[qIndex],buttons=[...$('choices').children],ok=i===q.correct;
+ buttons.forEach((b,j)=>{b.disabled=true;if(j===q.correct)b.classList.add('good');else if(j===i)b.classList.add('bad');});
+ if(ok){score+=10;$('score').textContent=fa(score);$('feedback').textContent='🌟 آفرین! پاسخ درست است. '+q.why;}
+ else $('feedback').textContent='اشکالی ندارد؛ با هم یاد می‌گیریم. پاسخ درست: '+q.opts[q.correct]+'؛ '+q.why;
+ $('quizNext').hidden=false;$('quizNext').textContent=qIndex===2?'دیدن نتیجه 🏆':'سؤال بعدی ←';
+}
+$('quizNext').addEventListener('click',()=>{
+ if(qIndex<2){qIndex++;ask();}
+ else{$('quiz').style.display='none';$('result').style.display='block';$('finalScore').textContent=fa(score)+' امتیاز';}
+});
+$('restart').addEventListener('click',()=>{
+ stage=0;score=0;qIndex=0;$('score').textContent='۰';
+ $('result').style.display='none';$('lesson').style.display='block';$('dots').style.display='flex';
+ $('next').style.display='block';$('prev').style.display='block';render();
+});
+render();
+})();
+</script>
+</body>
+</html>

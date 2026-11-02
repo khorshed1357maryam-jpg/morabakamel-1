@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#176b70">
+<title>کارآگاهان ضریب پنهان | مربع کامل با ضریب غیر یک</title>
+<style>
+:root{--ink:#243746;--teal:#176b70;--mint:#43a68b;--gold:#edb84e;--blue:#4d8bc8}
+*{box-sizing:border-box}
+body{margin:0;padding:15px;background:linear-gradient(135deg,#eaf8f4,#eff3ff);font-family:Tahoma,Arial,sans-serif;color:var(--ink)}
+main{max-width:850px;margin:auto}
+header{background:linear-gradient(120deg,#145d65,#398f86);color:white;padding:21px;border-radius:22px}
+h1{font-size:clamp(22px,4vw,32px);margin:7px 0}
+p{line-height:1.95}
+.stats{display:flex;justify-content:space-between;gap:10px;margin-top:16px;font-weight:bold}
+.track{height:9px;border-radius:20px;background:#ffffff55;margin-top:9px;overflow:hidden}
+#bar{height:100%;width:20%;background:#ffe28a;transition:width .3s}
+.dots{display:flex;justify-content:center;gap:8px;margin:15px}
+.dot{width:10px;height:10px;background:#c5d8d5;border-radius:20px}
+.dot.on{width:26px;background:#238579}
+.card{background:white;border:1px solid #dcebe8;border-radius:19px;padding:17px;margin-top:14px;box-shadow:0 5px 18px #164d4a0b}
+.small{font-size:13px;color:#397d76;font-weight:bold}
+h2{font-size:22px;margin:7px 0}
+.note{background:#eff8f5;border-radius:13px;padding:13px;text-align:center;line-height:2}
+.math{direction:ltr;text-align:center;font-family:Arial,sans-serif;font-size:clamp(20px,4vw,27px);font-weight:bold;color:#195f65;padding:12px;overflow-wrap:anywhere}
+button{font-family:inherit;font-size:15px;font-weight:bold;border:0;border-radius:12px;padding:13px;cursor:pointer}
+button:disabled{opacity:.4;cursor:not-allowed}
+.primary{background:#176b70;color:white}
+.secondary{background:#eaf3f1;color:#245b58}
+.controls{display:flex;gap:10px;margin-top:14px}
+.controls button{flex:1}
+.diagram{background:#f1f8f7;border-radius:15px;padding:13px;margin:14px auto;max-width:500px}
+svg{width:100%;height:auto;display:block}
+.legend{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;font-size:12px}
+.pill{padding:7px 9px;border-radius:20px;background:#e8f0f6}
+.quiz-choice{display:block;width:100%;margin:7px 0;background:#f2f7f6;color:#253d46;border:2px solid #dce9e7}
+.quiz-choice.good{background:#e5f7ec;border-color:#35a77b}
+.quiz-choice.bad{background:#fff0ed;border-color:#dc7668}
+#feedback{background:#f1f7f5;border-radius:12px;padding:12px;min-height:48px;line-height:1.8}
+#quiz,#result{display:none}
+@media(max-width:480px){body{padding:9px}.card{padding:13px}.controls button{font-size:13px;padding:11px 6px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+ <div style="font-size:14px;opacity:.9">بازی آموزشی ریاضی دهم انسانی</div>
+ <h1>🕵️ کارآگاهان ضریب پنهان</h1>
+ <p>وقتی ضریب x² یک نیست، اول باید آن را به یک تبدیل کنیم؛ بعد مربع کامل بسازیم.</p>
+ <div class="stats"><span>⭐ امتیاز: <b id="score">۰</b></span><span>مرحله <b id="stageNo">۱</b> از ۵</span></div>
+ <div class="track"><div id="bar"></div></div>
+</header>
+<div class="dots" id="dots"><span class="dot on"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+<section class="card" id="lesson">
+ <div class="small" id="mission">ماموریت اول</div>
+ <h2 id="title">ضریب پنهان را پیدا کن!</h2>
+ <p id="description">در معادله ۲x² + ۸x + ۳ = ۰، ضریب x² برابر ۲ است، نه ۱.</p>
+ <div class="diagram">
+  <div class="math" id="equation">2x² + 8x + 3 = 0</div>
+  <svg viewBox="0 0 330 145" role="img" aria-label="نمایش تصویری تقسیم عبارت بر ضریب دو">
+   <rect x="14" y="20" width="302" height="105" rx="14" fill="#dcefeb"/>
+   <rect x="25" y="32" width="83" height="80" rx="9" fill="#4d8bc8"/>
+   <rect x="123" y="32" width="83" height="80" rx="9" fill="#edb84e"/>
+   <rect x="221" y="32" width="83" height="80" rx="9" fill="#43a68b"/>
+   <g fill="white" font-size="18" font-weight="bold" text-anchor="middle">
+    <text x="66" y="78">۲x²</text><text x="164" y="78" fill="#49370b">۸x</text><text x="262" y="78">۳</text>
+   </g>
+   <g fill="#285e5b" font-size="12" text-anchor="middle"><text x="66" y="17">ضریب ۲</text><text x="164" y="17">ضریب ۸</text><text x="262" y="17">عدد ثابت</text></g>
+  </svg>
+  <div class="legend"><span class="pill">🟦 جمله درجه دو</span><span class="pill">🟨 جمله x</span><span class="pill">🟩 عدد ثابت</span></div>
+ </div>
+ <div class="note"><b>💡 نکته این مرحله</b><br><span id="hint">هدف: ضریب x² را یک کنیم.</span></div>
+ <div class="controls"><button class="secondary" id="prev" disabled>→ مرحله قبل</button><button class="primary" id="next">مرحله بعد ←</button></div>
+</section>
+<section class="card" id="quiz">
+ <div class="small">🎮 آزمون کارآگاهی</div><h2>حالا خودت امتحان کن!</h2>
+ <p id="question"></p><div id="choices"></div><div id="feedback" aria-live="polite">یک پاسخ را انتخاب کن.</div>
+ <button class="primary" id="quizNext" style="width:100%;margin-top:12px" hidden>سؤال بعدی ←</button>
+</section>
+<section class="card" id="result">
+ <div style="text-align:center"><div style="font-size:54px">🏆</div><h2>آفرین، ضریب پنهان را پیدا کردی!</h2><p>یادت باشد: اول ضریب x² را یک کن، بعد مربع کامل بساز.</p><div class="math" id="finalScore">۰ امتیاز</div></div>
+ <div class="note"><b>خلاصه روش</b><br>۲x² + ۸x + ۳ = ۰<br> x² + ۴x = −۳/۲<br> x² + ۴x + ۴ = −۳/۲ + ۴<br><b>(x + ۲)² = ۵/۲</b></div>
+ <button class="primary" id="restart" style="width:100%;margin-top:14px">🔄 شروع دوباره</button>
+</section>
+<footer style="text-align:center;color:#66817d;font-size:12px;margin:18px">مثال آموزشی با عددهای ساده؛ برای تدریس با گوشی، لپ‌تاپ و ویدئوپروژکتور</footer>
+</main>
+<script>
+(()=>{
+const $=id=>document.getElementById(id),fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+let stage=0,score=0,qi=0,answered=false;
+const data=[
+ {title:'ضریب پنهان را پیدا کن!',desc:'در معادله ۲x² + ۸x + ۳ = ۰، ضریب x² برابر ۲ است، نه ۱.',eq:'2x² + 8x + 3 = 0',hint:'هدف: ضریب x² را یک کنیم.'},
+ {title:'همه جمله‌ها را تقسیم کن!',desc:'برای اینکه ضریب x² یک شود، هر سه جمله و صفر را بر ۲ تقسیم می‌کنیم. هیچ جمله‌ای را جا نگذار!',eq:'x² + 4x + 3/2 = 0',hint:'۲x² ÷ ۲ = x² و ۸x ÷ ۲ = ۴x و ۳ ÷ ۲ = ۳/۲'},
+ {title:'عدد ثابت را تنها کن!',desc:'عدد ۳/۲ را به طرف دیگر تساوی می‌بریم. وقتی از چپ به راست می‌رود، علامتش منفی می‌شود.',eq:'x² + 4x = −3/2',hint:'فعلاً فقط جمله‌های دارای x در سمت چپ می‌مانند.'},
+ {title:'مربع کامل بساز!',desc:'نصف ضریب x یعنی نصف ۴ برابر ۲ است. سپس ۲ را در خودش ضرب می‌کنیم: ۲ × ۲ = ۴. عدد ۴ را به هر دو طرف اضافه می‌کنیم.',eq:'x² + 4x + 4 = −3/2 + 4',hint:'۴ را به هر دو طرف اضافه کردیم تا تساوی به هم نخورد.'},
+ {title:'مربع کامل را ببین!',desc:'سه جمله سمت چپ یک مربع کامل می‌سازند. سمت راست هم ۵/۲ می‌شود. پس (x+2)² = ۵/۲. برای ادامه، از دو طرف ریشه می‌گیریم.',eq:'(x + 2)² = 5/2',hint:'در این درس مهم‌ترین بخش، تبدیل عبارت به (x+2)² است.'}
+];
+function render(){
+ $('stageNo').textContent=fa(stage+1);$('bar').style.width=((stage+1)*20)+'%';
+ [...$('dots').children].forEach((d,i)=>d.classList.toggle('on',i===stage));
+ $('mission').textContent='ماموریت '+fa(stage+1);$('title').textContent=data[stage].title;
+ $('description').textContent=data[stage].desc;$('equation').textContent=data[stage].eq;$('hint').textContent=data[stage].hint;
+ $('prev').disabled=stage===0;$('next').textContent=stage===4?'رفتن به آزمون 🏆':'مرحله بعد ←';
+}
+$('next').addEventListener('click',()=>{if(stage<4){stage++;render();}else{$('lesson').style.display='none';$('dots').style.display='none';$('quiz').style.display='block';$('next').style.display='none';$('prev').style.display='none';startQuiz();}});
+$('prev').addEventListener('click',()=>{if(stage>0){stage--;render();}});
+const questions=[
+ {q:'در معادله ۳x² + ۶x + ۹ = ۰، برای یک شدن ضریب x² بر چند تقسیم می‌کنیم؟',opts:['۳','۶','۹'],correct:0,why:'چون ضریب x² برابر ۳ است، همه جمله‌ها را بر ۳ تقسیم می‌کنیم.'},
+ {q:'اگر بعد از تقسیم به x² + ۶x برسیم، نصف ضریب x چند است؟',opts:['۲','۳','۶'],correct:1,why:'نصف ۶ برابر ۳ است.'},
+ {q:'برای کامل کردن x² + ۶x چه عددی را به هر دو طرف اضافه می‌کنیم؟',opts:['۶','۹','۱۲'],correct:1,why:'نصف ۶ برابر ۳ و ۳ ضربدر ۳ برابر ۹ است.'}
+];
+function startQuiz(){qi=0;ask();}
+function ask(){answered=false;$('quizNext').hidden=true;let q=questions[qi];$('question').textContent='سؤال '+fa(qi+1)+' از ۳: '+q.q;$('choices').innerHTML='';q.opts.forEach((v,i)=>{let b=document.createElement('button');b.className='quiz-choice';b.textContent=v;b.addEventListener('click',()=>answer(i));$('choices').appendChild(b);});$('feedback').textContent='یک پاسخ را انتخاب کن.';}
+function answer(i){if(answered)return;answered=true;let q=questions[qi],buttons=[...$('choices').children],ok=i===q.correct;buttons.forEach((b,j)=>{b.disabled=true;if(j===q.correct)b.classList.add('good');else if(j===i)b.classList.add('bad');});if(ok){score+=10;$('score').textContent=fa(score);$('feedback').textContent='🌟 آفرین! '+q.why;}else $('feedback').textContent='اشکالی ندارد؛ پاسخ درست '+q.opts[q.correct]+' است. '+q.why;$('quizNext').hidden=false;$('quizNext').textContent=qi===2?'دیدن نتیجه 🏆':'سؤال بعدی ←';}
+$('quizNext').addEventListener('click',()=>{if(qi<2){qi++;ask();}else{$('quiz').style.display='none';$('result').style.display='block';$('finalScore').textContent=fa(score)+' امتیاز';}});
+$('restart').addEventListener('click',()=>{stage=0;score=0;qi=0;$('score').textContent='۰';$('result').style.display='none';$('lesson').style.display='block';$('dots').style.display='flex';$('next').style.display='block';$('prev').style.display='block';render();});
+render();
+})();
+</script>
+</body>
+</html>
